@@ -1,0 +1,56 @@
+version: "3"
+services:
+  apigateway:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: node_modules/.bin/nodemon --exec npm run dev
+    environment:
+      SECRET: "${SECRET}"
+    ports:
+      - 8080:8080
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    networks:
+     - apigateway
+  
+  apiproduct:
+   build:
+     context: ./apis/product/
+     dockerfile: Dockerfile
+  # command: node_modules/.bin/nodemon --exec npm run dev
+   container_name: api-product
+   environment:
+     SECRET: "${SECRET}"
+   ports:
+     - 3002:3002
+  #  volumes:
+  #    - .:/usr/src/app
+  #    - /usr/src/app/node_modules
+   networks:
+    - apigateway
+
+  apiusr:
+   build:
+     context: ./apis/user/
+     dockerfile: Dockerfile
+  # command: node_modules/.bin/nodemon --exec npm run dev
+   container_name: api-user
+   environment:
+     SECRET: "${SECRET}"
+   ports:
+     - 3001:3001
+  #  volumes:
+  #    - .:/usr/src/app
+  #    - /usr/src/app/node_modules
+   networks:
+    - apigateway
+
+# Create networks if not exists 
+networks:
+  apigateway:
+    driver: bridge
+    driver_opts:
+      com.docker.network.driver.mtu: 1450
+  
