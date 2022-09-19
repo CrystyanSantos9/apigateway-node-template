@@ -14,7 +14,7 @@ app.get('/products', (request, response) => {
     response.send('Service Products');
 });
 
-app.post('/users', (request, response) => {
+app.post('/products', (request, response) => {
     // console.log(request.headers['x-access-token']);
     const responseTDO = request.headers;
     response.statusCode = 201;
