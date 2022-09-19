@@ -26,8 +26,8 @@ function verifyJWT(request, response, next) {
 }
 
 // Fazendo o proxy para uma api 
-const userServiceProxy = httpProxy('http://localhost:3001');
-const productsService = httpProxy('http://localhost:3002');
+const userServiceProxy = httpProxy('http://apiusr:3001');
+const productsService = httpProxy('http://apiproduct:3002');
 
 
 // Proxy request - rotas da api
@@ -35,8 +35,19 @@ app.get('/users', verifyJWT, (request, response, next) => {
     userServiceProxy(request, response, next);
 });
 
+
+// Proxy request - rotas da api
+app.post('/users', verifyJWT, (request, response, next) => {
+    userServiceProxy(request, response, next);
+});
+
 app.get('/products', verifyJWT, (request, response, next) => {
     productsService(request, response, next);
+});
+
+// Proxy request - rotas da api
+app.post('/products', verifyJWT, (request, response, next) => {
+    userServiceProxy(request, response, next);
 });
 
 // middlewares 
@@ -54,7 +65,7 @@ app.post('/login', (request, response, next) => {
         const id = 1;
 
         const token = jwt.sign({ id }, process.env.SECRET, {
-            expiresIn: 300 // exprires 5 min 
+            expiresIn: 3600 // exprires 60 min 
         });
 
         response.statusCode = 200;
