@@ -1,0 +1,49 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Convert Blob to Base64 String</title>
+    <input type="file" id="fileinput">
+    <div id="placeToImages">
+
+    </div>
+</head>
+
+<body>
+    <div>Hello GeeksForGeeks</div>
+    <script type="text/javascript">
+        const fileinput = document.querySelector('#fileinput')
+        const placetoimages = document.querySelector('#placeToImages')
+
+        fileinput.addEventListener('change', function handleFiles() {
+            const fileList = this.files
+            if (fileList.length > 0) {
+                const objectFile = fileList[0]
+
+                let blob = new Blob([objectFile], { type: objectFile.type });
+                // The full Blob Object can be seen 
+                // in the Console of the Browser
+                console.log('Blob - ', blob);
+
+                var reader = new FileReader();
+                reader.readAsDataURL(blob);
+                reader.onloadend = function () {
+                    var base64String = reader.result;
+                    console.log('Base64 String - ', base64String);
+
+                    // Simply Print the Base64 Encoded String,
+                    // without additional data: Attributes.
+                    console.log('Base64 String without Tags- ',
+                        base64String.substr(base64String.indexOf(', ') + 1));
+
+                        const imageFrame = document.createElement('img')
+                       imageFrame.setAttribute('src', base64String)
+                       placetoimages.appendChild(imageFrame)
+                }
+
+            }
+        }, false)
+    </script>
+</body>
+
+</html>

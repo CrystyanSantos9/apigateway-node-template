@@ -8,7 +8,10 @@ services:
     environment:
       SECRET: "${SECRET}"
     ports:
-      - 8080:8080
+       - target: 80
+         published: 8080
+         protocol: tcp
+         mode: host
     volumes:
       - .:/usr/src/app
       - /usr/src/app/node_modules
@@ -50,7 +53,9 @@ services:
 # Create networks if not exists 
 networks:
   apigateway:
-    driver: bridge
-    driver_opts:
-      com.docker.network.driver.mtu: 1450
+    driver: default
+    enable_ipv6: false
+    # driver: bridge
+    # driver_opts: //driver brige brokes the connection creating both ipv4 and ipv6 ports
+    #   com.docker.network.driver.mtu: 1450
   

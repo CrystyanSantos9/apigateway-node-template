@@ -11,8 +11,8 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+
 app.get('/users', (request, response) => {
-    console.log(request.headers['x-access-token']);
     response.send('Service Users');
 });
 
