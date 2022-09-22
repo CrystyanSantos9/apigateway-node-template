@@ -8,7 +8,7 @@ const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const helmet = require('helmet');
 const jwt = require('jsonwebtoken');
-
+var fs = require('fs');
 
 
 // verify Authorization
@@ -26,8 +26,18 @@ function verifyJWT(request, response, next) {
 }
 
 // Fazendo o proxy para uma api 
-const userServiceProxy = httpProxy('http://apiusr:3001');
-const productsService = httpProxy('http://apiproduct:3002');
+
+const userServiceProxy = httpProxy('http://192.168.1.110:3001', {
+    userResDecorator: function(proxyRes, proxyResData, userReq, userRes) {
+        data = JSON.parse(proxyResData.toString('utf8'));
+        console.log(data)
+        data.authorization = '';
+        userRes.removeHeader('x-powered-by');
+        userRes.setHeader('Is-Changed', 'true')
+        return JSON.stringify(data);
+      }
+});
+const productsService = httpProxy('http://192.168.1.110:3002');
 
 
 // Proxy request - rotas da api
@@ -47,7 +57,7 @@ app.get('/products', verifyJWT, (request, response, next) => {
 
 // Proxy request - rotas da api
 app.post('/products', verifyJWT, (request, response, next) => {
-    userServiceProxy(request, response, next);
+    productsService(request, response, next);
 });
 
 // middlewares 
