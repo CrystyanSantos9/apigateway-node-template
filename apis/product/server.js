@@ -11,6 +11,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.get('/products', (request, response) => {
+    response.removeHeader('content-length')
     response.send('Service Products');
 });
 
@@ -18,6 +19,7 @@ app.post('/products', (request, response) => {
     // console.log(request.headers['x-access-token']);
     const responseTDO = request.headers;
     response.statusCode = 201;
+    response.removeHeader('content-length')
     response.send(JSON.stringify(responseTDO));
 });
 
