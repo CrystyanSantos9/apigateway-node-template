@@ -1,0 +1,44 @@
+1 - verificar informações do certificado
+
+openssl x509 -in ca-cert.cer -text
+
+1 - Criando certificado CA usado para assinar os certificados - Tanto client quanto server devem saber desse CA 
+
+Obs - A saída será uma par de chaves - ca.key e ca.crt 
+
+openssl req \
+  -newkey rsa:4096 \
+  -x509 \
+  -keyout ca.key \
+  -out ca.crt \
+  -days 30 \
+  -nodes \
+  -subj "/CN=api_my_ca"
+
+2 - Criar uma chave e um certificado para o lado do servidor - NODEjs criamos também um Pedido de requisição (CSR)
+
+O CSR é utilizado junto com a ca.key e o ca.crt para gerar o certificado assinado
+
+openssl req \
+  -newkey rsa:4096 \
+  -keyout api.local.key \
+  -out api.local.csr \
+  -nodes \
+  -days 30 \
+  -subj "/CN=api.local.com"
+
+ 3 - Criando o certificado assinado pelo meu CA usando o meu pedido de requisição ( CSR )
+
+  openssl x509 \
+  -req \
+  -in api.local.csr \
+  -out api.local.crt \
+  -CA ca.crt \
+  -CAkey ca.key \
+  -CAcreateserial \
+  -days 30
+
+4 - Criando DH param 
+
+
+openssl dhparam -out dhparams.pem 2048
